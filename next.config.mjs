@@ -26,4 +26,21 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.dicebear.com",
+        port: "",
+        pathname: "/api/adventurer/**",
+      },
+      //https://lh3.googleusercontent.com/a/ALm5wu0b3RfytgtdozELUI-UXGGaQ2-3ir5zMI-14Jw6plg=s96-c)
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/a/**",
+      },
+    ],
+  },
 });

@@ -1,11 +1,10 @@
-import { GetServerSidePropsContext } from "next";
 import { signOut, useSession } from "next-auth/react";
-import { getServerAuthSession } from "../../server/common/get-server-auth-session";
 import { trpc } from "../../utils/trpc";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Dashboard from "../../components/layout/Dashboard";
 
 const schema = z.object({
   exampleName: z.string().min(1, { message: "Required" }),
@@ -33,46 +32,35 @@ export default function App() {
 
   return (
     <div>
-      <>
-        <p>epa {data?.user?.name}!</p>;
-        <button className="btn" onClick={() => signOut()}>
-          Log out
-        </button>
-        <div>
-          {(isLoading && "loading examples") ||
-            exampleData?.map((example) => {
-              return <div key={example.id}>{JSON.stringify(example)}</div>;
-            })}
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register("exampleName")} />
-          {errors.exampleName?.message && (
-            <p>{`${errors.exampleName?.message}`}</p>
-          )}
-          <input type="number" {...register("age", { valueAsNumber: true })} />
-          {errors.age?.message && <p>{`${errors.age?.message}`}</p>}
-          <input type="submit" />
-          {mutation.error && (
-            <p>Something went wrong! {mutation.error.message}</p>
-          )}
-        </form>
-      </>
+      <Dashboard>
+        <>
+          <p>epa {data?.user?.name}!</p>;
+          <button className="btn" onClick={() => signOut()}>
+            Log out
+          </button>
+          <div>
+            {(isLoading && "loading examples") ||
+              exampleData?.map((example) => {
+                return <div key={example.id}>{JSON.stringify(example)}</div>;
+              })}
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input {...register("exampleName")} />
+            {errors.exampleName?.message && (
+              <p>{`${errors.exampleName?.message}`}</p>
+            )}
+            <input
+              type="number"
+              {...register("age", { valueAsNumber: true })}
+            />
+            {errors.age?.message && <p>{`${errors.age?.message}`}</p>}
+            <input type="submit" />
+            {mutation.error && (
+              <p>Something went wrong! {mutation.error.message}</p>
+            )}
+          </form>
+        </>
+      </Dashboard>
     </div>
   );
-}
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const sesh = await getServerAuthSession(ctx);
-  if (!sesh?.user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
 }
