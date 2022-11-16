@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 export default function Navbar() {
   const { data } = useSession();
@@ -34,14 +33,7 @@ export default function Navbar() {
             className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
           >
             <li>
-              <Link href="/app/settings">Settings</Link>
-              <a>Homepage</a>
-            </li>
-            <li>
-              <a>Portfolio</a>
-            </li>
-            <li>
-              <a>About</a>
+              <Link href="/app/posts/create">Create post</Link>
             </li>
           </ul>
         </div>
