@@ -9,7 +9,10 @@ export default function Dashboard({ children }: IDashboardProps) {
   return (
     <div>
       <Navbar />
-      <main>{children}</main>
+
+      <main className="container mx-auto h-screen bg-neutral-focus shadow-xl">
+        {children}
+      </main>
     </div>
   );
 }
