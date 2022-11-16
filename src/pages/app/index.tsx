@@ -1,4 +1,3 @@
-import { signOut, useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,7 +13,6 @@ const schema = z.object({
 type IData = z.infer<typeof schema>;
 
 export default function App() {
-  const { data } = useSession();
   const { data: exampleData, isLoading } = trpc.example.getAll.useQuery();
   const mutation = trpc.example.insert.useMutation();
 
@@ -34,14 +32,23 @@ export default function App() {
     <div>
       <Dashboard>
         <>
-          <p>epa {data?.user?.name}!</p>;
-          <button className="btn" onClick={() => signOut()}>
-            Log out
-          </button>
-          <div>
+          <div className="flex flex-wrap justify-center gap-4">
             {(isLoading && "loading examples") ||
               exampleData?.map((example) => {
-                return <div key={example.id}>{JSON.stringify(example)}</div>;
+                return (
+                  <div
+                    key={example.id}
+                    className="card w-96 bg-base-100 shadow-xl"
+                  >
+                    <div className="card-body">
+                      <h2 className="card-title">Epa</h2>
+                      <p>{example.exampleName}</p>
+                      <div className="card-actions justify-end">
+                        <button className="btn-primary btn">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                );
               })}
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
