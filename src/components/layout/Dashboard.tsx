@@ -1,4 +1,5 @@
 import React from "react";
+
 import Navbar from "./Navbar";
 
 interface IDashboardProps {
@@ -10,9 +11,7 @@ export default function Dashboard({ children }: IDashboardProps) {
     <div>
       <Navbar />
 
-      <main className="container mx-auto h-screen bg-neutral-focus pt-4 shadow-xl">
-        {children}
-      </main>
+      <main className="container mx-auto pt-4">{children}</main>
     </div>
   );
 }

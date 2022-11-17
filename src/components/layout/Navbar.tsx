@@ -9,7 +9,10 @@ export default function Navbar() {
     `https://avatars.dicebear.com/api/adventurer/${data?.user?.id}`;
 
   return (
-    <div className="navbar sticky top-0 z-20 bg-neutral text-neutral-content drop-shadow-lg">
+    <div
+      className="navbar sticky top-0 z-20 
+      backdrop-blur-sm"
+    >
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn-ghost btn-circle btn">
@@ -38,11 +41,17 @@ export default function Navbar() {
           </ul>
         </div>
       </div>
-
+      <div className="navbar-center">
+        <Link href="/app">
+          <span className="link-hover link text-xl font-bold normal-case text-primary">
+            Jobnica
+          </span>
+        </Link>
+      </div>
       <div className="navbar-end">
         <Link href="/app/profile">
           <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-            <div className="w-10 rounded-full ring ring-secondary ring-offset-2 ring-offset-base-100">
+            <div className="w-10 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
               <Image
                 className="w-10 rounded-full"
                 src={userImage}
