@@ -11,7 +11,7 @@ export default function Dashboard({ children }: IDashboardProps) {
     <div>
       <Navbar />
 
-      <main className="container mx-auto pt-4">{children}</main>
+      <main className="container prose mx-auto pt-4">{children}</main>
     </div>
   );
 }
