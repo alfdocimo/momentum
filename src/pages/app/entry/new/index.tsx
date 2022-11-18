@@ -26,16 +26,29 @@ export default function NewEntry() {
     formState: { errors },
   } = useForm<IEntry>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      rating: "NORMAL",
+    },
   });
 
-  const onSubmit = (data: IEntry) => console.log({ data });
+  const onSubmit = (data: IEntry) => {};
 
   return (
     <Dashboard>
       <h1>New entry</h1>
-      <h2>How are you feeling today?</h2>
+
+      <div className="card w-full bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h2 className="card-title">Card title!</h2>
+          <p>If a dog chews shoes whose shoes does he choose?</p>
+          <div className="card-actions justify-end">
+            <button className="btn-primary btn">Buy Now</button>
+          </div>
+        </div>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="rating gap-1">
+        <h2>How are you feeling today?</h2>
+        <div className="rating rating-lg gap-1">
           <input
             {...register("rating")}
             value={RATING_VALUES_ENUM.Enum.VERY_BAD}
@@ -67,7 +80,18 @@ export default function NewEntry() {
             className="mask mask-heart bg-green-400"
           />
         </div>
-
+        <h2>Today I learned...</h2>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input input-lg w-full max-w-xs"
+        />
+        <h2>Today I worked on...</h2>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input input-lg w-full max-w-xs"
+        />
         <input type="submit" className="btn-outline btn" value="Send" />
       </form>
     </Dashboard>
