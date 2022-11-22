@@ -25,15 +25,17 @@ export default function App({
       {percentageYearCompleted}
       <h1>Hello, {data?.user?.name}</h1>
       <div className="flex justify-center">
-        <button
-          disabled={hasPostedToday}
-          onClick={() => {
-            router.push("/app/entry/new");
-          }}
-          className="btn-outline btn-lg btn"
-        >
-          New entry ✏️
-        </button>
+        <div className="tooltip" data-tip="You can only post once per day">
+          <button
+            disabled={hasPostedToday}
+            onClick={() => {
+              router.push("/app/entry/new");
+            }}
+            className="btn-outline btn-lg btn"
+          >
+            New entry ✏️
+          </button>
+        </div>
       </div>
       {/* <section>
         <progress

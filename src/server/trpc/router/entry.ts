@@ -60,9 +60,21 @@ export const entryRouter = router({
   }),
   summary: protectedProcedure.query(async ({ ctx }) => {
     const userId = await ctx.session?.user?.id;
+
+    const currentYear = new Date().getFullYear();
+
+    console.log({
+      gte: new Date(`${currentYear}-01-01`),
+      lte: new Date(`${currentYear}-31-12`),
+    });
+
     const allEntries = await ctx.prisma.entry.findMany({
       where: {
         userId,
+        createdAt: {
+          gte: new Date(`${currentYear}-01-01`),
+          lte: new Date(`${currentYear}-12-31`),
+        },
       },
     });
 
@@ -89,6 +101,8 @@ export const entryRouter = router({
     function getEntryRatingAverage(score: number) {
       return (score / allEntries.length) * 100;
     }
+
+    function daysWithEntriesAverage() {}
 
     return {
       scoreAverage: {
