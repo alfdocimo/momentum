@@ -109,7 +109,9 @@ export default function NewEntry({}: InferGetServerSidePropsType<
             />
             <datalist id="suggestions">
               {getHaveWorkedOnData?.haveWorkedOnSuggest.map((option) => (
-                <option key={option.id} value={option.tiwo} />
+                <option key={option.id} value={`${option.tiwo}`}>
+                  {option.tiwo}
+                </option>
               ))}
             </datalist>
             <div className="card-actions flex justify-center pt-4">
