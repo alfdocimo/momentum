@@ -6,6 +6,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
 
+// why is google auth so hard shm
+
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
