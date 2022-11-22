@@ -14,8 +14,9 @@ export default function App({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data } = useSession();
   const router = useRouter();
-  const { data: listEntryData } = trpc.entry.list.useQuery();
 
+  const { data: summaryData } = trpc.entry.summary.useQuery();
+  console.log({ summaryData });
   return (
     <Dashboard>
       {percentageYearCompleted}
@@ -37,7 +38,42 @@ export default function App({
           max="100"
         ></progress>
       </section> */}
-      {JSON.stringify(listEntryData)}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h2 className="card-title">Overall you have felt...</h2>
+          <h3>Very bad</h3>
+          <progress
+            className="progress progress-error"
+            value={summaryData?.scoreAverage.VERY_BAD}
+            max="100"
+          ></progress>
+          <h3>Bad</h3>
+          <progress
+            className="progress progress-warning"
+            value={summaryData?.scoreAverage.BAD}
+            max="100"
+          ></progress>
+          <h3>Normal</h3>
+          <progress
+            className="progress progress-info"
+            value={summaryData?.scoreAverage.NORMAL}
+            max="100"
+          ></progress>
+          <h3>Good</h3>
+          <progress
+            className="progress progress-success"
+            value={summaryData?.scoreAverage.GOOD}
+            max="100"
+          ></progress>
+          <h3>Very good</h3>
+          <progress
+            className="progress progress-success"
+            value={summaryData?.scoreAverage.VERY_GOOD}
+            max="100"
+          ></progress>
+        </div>
+      </div>
+      <div className="flex flex-col"></div>
     </Dashboard>
   );
 }

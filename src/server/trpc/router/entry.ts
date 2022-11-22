@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 const RATING_VALUES = [
@@ -18,21 +18,85 @@ const schema = z.object({
 });
 
 export const entryRouter = router({
-  create: publicProcedure.input(schema).mutation(({ input, ctx }) => {
+  create: protectedProcedure.input(schema).mutation(async ({ input, ctx }) => {
+    const hasPostedToday = await ctx.prisma.entry.findFirst({
+      where: {
+        createdAt: {
+          lte: new Date(),
+        },
+      },
+    });
+
+    if (hasPostedToday) {
+      throw new Error("Cannot post on the same day twice");
+    }
+
     return ctx.prisma.entry.create({
       data: {
-        userId: ctx?.session?.user?.id as string,
+        userId: ctx?.session?.user?.id,
         rating: input.rating,
         til: input.til,
         tiwo: input.tiwo,
       },
     });
   }),
-  list: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.entry.findMany({
+  hasPostedToday: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.entry.findFirst({
       where: {
-        userId: ctx.session?.user?.id as string,
+        createdAt: {
+          lte: new Date(),
+        },
       },
     });
+  }),
+
+  list: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.entry.findMany({
+      where: {
+        userId: ctx.session?.user?.id,
+      },
+    });
+  }),
+  summary: protectedProcedure.query(async ({ ctx }) => {
+    const userId = await ctx.session?.user?.id;
+    const allEntries = await ctx.prisma.entry.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    type score<ScoreType> = {
+      BAD: ScoreType;
+      VERY_BAD: ScoreType;
+      NORMAL: ScoreType;
+      GOOD: ScoreType;
+      VERY_GOOD: ScoreType;
+    };
+
+    const scoreDictionary: score<number> = {
+      BAD: 0,
+      VERY_BAD: 0,
+      NORMAL: 0,
+      GOOD: 0,
+      VERY_GOOD: 0,
+    };
+
+    allEntries.forEach((entry) => {
+      scoreDictionary[entry.rating] += 1;
+    });
+
+    function getEntryRatingAverage(score: number) {
+      return (score / allEntries.length) * 100;
+    }
+
+    return {
+      scoreAverage: {
+        BAD: getEntryRatingAverage(scoreDictionary.BAD),
+        VERY_BAD: getEntryRatingAverage(scoreDictionary.VERY_BAD),
+        GOOD: getEntryRatingAverage(scoreDictionary.GOOD),
+        NORMAL: getEntryRatingAverage(scoreDictionary.NORMAL),
+        VERY_GOOD: getEntryRatingAverage(scoreDictionary.VERY_GOOD),
+      },
+    };
   }),
 });
