@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 export default function Hero() {
@@ -8,8 +7,8 @@ export default function Hero() {
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">Welcome to Momentum</h1>
           <p className="py-6">
-            Reflect on how you are feeling daily, check on things you're working
-            on and have learned
+            Reflect on how you are feeling daily, check on things you are
+            working on and have learned
           </p>
 
           <button
