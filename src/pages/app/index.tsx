@@ -14,6 +14,7 @@ export default function App({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data } = useSession();
   const router = useRouter();
+  const { data: listEntryData } = trpc.entry.list.useQuery();
 
   return (
     <Dashboard>
@@ -36,6 +37,7 @@ export default function App({
           max="100"
         ></progress>
       </section> */}
+      {JSON.stringify(listEntryData)}
     </Dashboard>
   );
 }
