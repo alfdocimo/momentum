@@ -1,19 +1,11 @@
 import { trpc } from "../../utils/trpc";
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import Dashboard from "../../components/layout/Dashboard";
 import { useSession } from "next-auth/react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Link from "next/link";
+
 import { useRouter } from "next/router";
 
-import { prisma } from "../../server/db/client";
-
-export default function App({
-  percentageYearCompleted,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function App() {
   const { data } = useSession();
   const router = useRouter();
 
@@ -22,7 +14,6 @@ export default function App({
 
   return (
     <Dashboard>
-      {percentageYearCompleted}
       <h1>Hello, {data?.user?.name}</h1>
       <div className="flex justify-center">
         <div className="tooltip" data-tip="You can only post once per day">
@@ -37,41 +28,65 @@ export default function App({
           </button>
         </div>
       </div>
-      {/* <section>
-        <progress
-          className="progress w-56"
-          value={percentageYearCompleted}
-          max="100"
-        ></progress>
-      </section> */}
-      <div className="card bg-base-100 shadow-xl">
+      <div className="stats mt-8 w-full shadow-md">
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <span className="text-5xl">📕</span>
+          </div>
+          <div className="stat-value text-primary">
+            {summaryData?.totalEntries}
+          </div>
+          <div className="stat-title">Total entries</div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <span className="text-5xl">🗓</span>
+          </div>
+          <div className="stat-value text-secondary">
+            {summaryData?.monthEntries}
+          </div>
+          <div className="stat-title">This month entries</div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <span className="text-5xl">🔎</span>
+          </div>
+          <div className="stat-value">
+            {summaryData?.daysWithEntriesAverage}%
+          </div>
+          <div className="stat-title">Yearly entries</div>
+        </div>
+      </div>
+      <div className="card mt-8 bg-base-100 shadow-md">
         <div className="card-body">
-          <h2 className="card-title">Overall you have felt...</h2>
-          <h3>Very bad</h3>
+          <h2>Overall you have felt...</h2>
+          <h3>Very bad 😞</h3>
           <progress
             className="progress progress-error"
             value={summaryData?.scoreAverage.VERY_BAD}
             max="100"
           ></progress>
-          <h3>Bad</h3>
+          <h3>Bad 😕</h3>
           <progress
             className="progress progress-warning"
             value={summaryData?.scoreAverage.BAD}
             max="100"
           ></progress>
-          <h3>Normal</h3>
+          <h3>Normal 😐</h3>
           <progress
             className="progress progress-info"
             value={summaryData?.scoreAverage.NORMAL}
             max="100"
           ></progress>
-          <h3>Good</h3>
+          <h3>Good 🙂</h3>
           <progress
             className="progress progress-success"
             value={summaryData?.scoreAverage.GOOD}
             max="100"
           ></progress>
-          <h3>Very good</h3>
+          <h3>Very good 😄</h3>
           <progress
             className="progress progress-success"
             value={summaryData?.scoreAverage.VERY_GOOD}
@@ -97,22 +112,3 @@ export default function App({
 //     },
 //   };
 // }
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const now = new Date();
-
-  const yearStart = new Date(now.getFullYear(), 0, 1);
-
-  const yearEnd = new Date(now.getFullYear() + 1, 0, 1);
-
-  const totalDuration = yearEnd.getTime() - yearStart.getTime();
-  const currentDuration = now.getTime() - yearStart.getTime();
-
-  const percentageYearCompleted = (currentDuration / totalDuration) * 100;
-
-  return {
-    props: {
-      percentageYearCompleted,
-    },
-  };
-}

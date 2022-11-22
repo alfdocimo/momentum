@@ -62,11 +62,11 @@ export const entryRouter = router({
     const userId = await ctx.session?.user?.id;
 
     const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
 
-    console.log({
-      gte: new Date(`${currentYear}-01-01`),
-      lte: new Date(`${currentYear}-31-12`),
-    });
+    function getLastDayOfMonth(year: number, month: number) {
+      return new Date(year, month + 1, 0);
+    }
 
     const allEntries = await ctx.prisma.entry.findMany({
       where: {
@@ -77,6 +77,19 @@ export const entryRouter = router({
         },
       },
     });
+
+    const monthEntries = await ctx.prisma.entry.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: new Date(currentYear, currentMonth, 1),
+          lte: getLastDayOfMonth(currentYear, currentMonth),
+        },
+      },
+    });
+
+    const entriesLength = allEntries.length;
+    const monthEntriesLength = monthEntries.length;
 
     type score<ScoreType> = {
       BAD: ScoreType;
@@ -99,12 +112,17 @@ export const entryRouter = router({
     });
 
     function getEntryRatingAverage(score: number) {
-      return (score / allEntries.length) * 100;
+      return (score / entriesLength) * 100;
     }
 
-    function daysWithEntriesAverage() {}
+    function daysWithEntriesAverage() {
+      return Math.round((entriesLength / 365) * 100);
+    }
 
     return {
+      monthEntries: monthEntriesLength,
+      totalEntries: entriesLength,
+      daysWithEntriesAverage: daysWithEntriesAverage(),
       scoreAverage: {
         BAD: getEntryRatingAverage(scoreDictionary.BAD),
         VERY_BAD: getEntryRatingAverage(scoreDictionary.VERY_BAD),
