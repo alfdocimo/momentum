@@ -28,7 +28,7 @@ export default function App() {
           </button>
         </div>
       </div>
-      <div className="stats mt-8 w-full shadow-md">
+      <div className="stats stats-vertical mt-8 w-full shadow-md lg:stats-horizontal">
         <div className="stat">
           <div className="stat-figure text-primary">
             <span className="text-5xl">📕</span>
@@ -94,7 +94,22 @@ export default function App() {
           ></progress>
         </div>
       </div>
-      <div className="flex flex-col"></div>
+      <div className="card mt-8 bg-base-100 shadow-md">
+        <div className="card-body">
+          <h2>This month you have learned...</h2>
+          {summaryData?.learnedThisMonth.map((learned) => (
+            <h3 key={learned}>🚀 {learned}</h3>
+          ))}
+        </div>
+      </div>
+      <div className="card mt-8 bg-base-100 shadow-md">
+        <div className="card-body">
+          <h2>This month you have worked on...</h2>
+          {summaryData?.workedOnThisMonth.map((worked) => (
+            <h3 key={worked}>✅ {worked}</h3>
+          ))}
+        </div>
+      </div>
     </Dashboard>
   );
 }

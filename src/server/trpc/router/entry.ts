@@ -116,13 +116,23 @@ export const entryRouter = router({
     }
 
     function daysWithEntriesAverage() {
-      return Math.round((entriesLength / 365) * 100);
+      return (entriesLength / 365) * 100;
+    }
+
+    function learnedThisMonth() {
+      return monthEntries.map((entry) => entry.til);
+    }
+
+    function workedOnThisMonth() {
+      return monthEntries.map((entry) => entry.tiwo);
     }
 
     return {
+      learnedThisMonth: learnedThisMonth(),
+      workedOnThisMonth: workedOnThisMonth(),
       monthEntries: monthEntriesLength,
       totalEntries: entriesLength,
-      daysWithEntriesAverage: daysWithEntriesAverage(),
+      daysWithEntriesAverage: daysWithEntriesAverage().toFixed(2),
       scoreAverage: {
         BAD: getEntryRatingAverage(scoreDictionary.BAD),
         VERY_BAD: getEntryRatingAverage(scoreDictionary.VERY_BAD),
