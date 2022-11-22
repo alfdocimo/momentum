@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +15,16 @@ export default function Navbar() {
       className="navbar sticky top-0 z-20 
       backdrop-blur-sm"
     >
-      <div className="navbar-start"></div>
+      <div className="navbar-start">
+        <button
+          onClick={() => {
+            signOut();
+          }}
+          className="btn-outline btn"
+        >
+          Log out🚪
+        </button>
+      </div>
       <div className="navbar-center">
         <Link href="/app">
           <span className="link-hover link text-xl font-bold normal-case text-primary">
