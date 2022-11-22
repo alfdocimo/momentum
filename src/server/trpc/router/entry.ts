@@ -40,14 +40,15 @@ export const entryRouter = router({
       },
     });
   }),
-  hasPostedToday: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.entry.findFirst({
+  hasPostedToday: protectedProcedure.query(async ({ ctx }) => {
+    const hasPostedToday = await ctx.prisma.entry.findFirst({
       where: {
         createdAt: {
           lte: new Date(),
         },
       },
     });
+    return hasPostedToday ? true : false;
   }),
 
   list: protectedProcedure.query(({ ctx }) => {

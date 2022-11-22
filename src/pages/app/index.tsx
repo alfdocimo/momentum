@@ -9,6 +9,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { prisma } from "../../server/db/client";
+
 export default function App({
   percentageYearCompleted,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -16,13 +18,15 @@ export default function App({
   const router = useRouter();
 
   const { data: summaryData } = trpc.entry.summary.useQuery();
-  console.log({ summaryData });
+  const { data: hasPostedToday } = trpc.entry.hasPostedToday.useQuery();
+
   return (
     <Dashboard>
       {percentageYearCompleted}
       <h1>Hello, {data?.user?.name}</h1>
       <div className="flex justify-center">
         <button
+          disabled={hasPostedToday}
           onClick={() => {
             router.push("/app/entry/new");
           }}
