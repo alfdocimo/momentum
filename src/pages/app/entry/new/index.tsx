@@ -30,6 +30,7 @@ export default function NewEntry({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) {
   const createEntryMutation = trpc.entry.create.useMutation();
+  const { data: getHaveWorkedOnData } = trpc.entry.getHaveWorkedOn.useQuery();
   const router = useRouter();
   const {
     register,
@@ -101,11 +102,16 @@ export default function NewEntry({}: InferGetServerSidePropsType<
             />
             <h2>Today I worked on...</h2>
             <input
-              {...register("tiwo")}
-              type="text"
               placeholder="Reflect on one thing you worked on today"
               className="input-bordered input input-lg w-full"
+              {...register("tiwo")}
+              list="suggestions"
             />
+            <datalist id="suggestions">
+              {getHaveWorkedOnData?.haveWorkedOnSuggest.map((option) => (
+                <option key={option.id} value={option.tiwo} />
+              ))}
+            </datalist>
             <div className="card-actions flex justify-center pt-4">
               <input type="submit" className="btn-outline btn" value="Send" />
             </div>
@@ -139,6 +145,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         permanent: false,
         destination: "/app",
       },
+      props: {},
+    };
+  } else {
+    return {
       props: {},
     };
   }

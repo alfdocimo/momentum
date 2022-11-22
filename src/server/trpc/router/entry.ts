@@ -150,4 +150,18 @@ export const entryRouter = router({
       },
     };
   }),
+  getHaveWorkedOn: protectedProcedure.query(async ({ ctx }) => {
+    const listHaveWorkedOn = await ctx.prisma.entry.findMany({
+      where: {
+        userId: ctx.session?.user?.id,
+      },
+    });
+
+    return {
+      haveWorkedOnSuggest: listHaveWorkedOn.map((entry) => ({
+        id: entry.id,
+        tiwo: entry.tiwo,
+      })),
+    };
+  }),
 });
