@@ -17,12 +17,20 @@ const schema = z.object({
   tiwo: z.string(),
 });
 
+const getDate = (givenDate = new Date()): string => {
+  const offset = givenDate.getTimezoneOffset();
+  givenDate = new Date(givenDate.getTime() - offset * 60 * 1000);
+  const parsedDate = givenDate.toISOString().split("T");
+  if (!parsedDate[0]) return "";
+  return parsedDate[0];
+};
+
 export const entryRouter = router({
   create: protectedProcedure.input(schema).mutation(async ({ input, ctx }) => {
     const hasPostedToday = await ctx.prisma.entry.findFirst({
       where: {
         createdAt: {
-          lte: new Date(),
+          gte: new Date(getDate()),
         },
       },
     });
@@ -44,7 +52,7 @@ export const entryRouter = router({
     const hasPostedToday = await ctx.prisma.entry.findFirst({
       where: {
         createdAt: {
-          lte: new Date(),
+          gte: new Date(getDate()),
         },
       },
     });

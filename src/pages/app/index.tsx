@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <Dashboard>
-      <h1>Hello, {data?.user?.name}</h1>
+      <h1>Hello, {data?.user?.name?.split(" ")[0]}!</h1>
       <div className="flex justify-center">
         <div className="tooltip" data-tip="You can only post once per day">
           <button

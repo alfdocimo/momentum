@@ -4,6 +4,9 @@ import * as z from "zod";
 import Dashboard from "../../../../components/layout/Dashboard";
 import { trpc } from "../../../../utils/trpc";
 import { useRouter } from "next/router";
+import { prisma } from "../../../../server/db/client";
+
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 const RATING_VALUES = [
   "VERY_BAD",
@@ -23,7 +26,9 @@ const schema = z.object({
 
 type IEntry = z.infer<typeof schema>;
 
-export default function NewEntry() {
+export default function NewEntry({}: InferGetServerSidePropsType<
+  typeof getServerSideProps
+>) {
   const createEntryMutation = trpc.entry.create.useMutation();
   const router = useRouter();
   const {
@@ -109,4 +114,32 @@ export default function NewEntry() {
       </div>
     </Dashboard>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const getDate = (givenDate = new Date()): string => {
+    const offset = givenDate.getTimezoneOffset();
+    givenDate = new Date(givenDate.getTime() - offset * 60 * 1000);
+    const parsedDate = givenDate.toISOString().split("T");
+    if (!parsedDate[0]) return "";
+    return parsedDate[0];
+  };
+
+  const hasPostedToday = await prisma.entry.findFirst({
+    where: {
+      createdAt: {
+        gte: new Date(getDate()),
+      },
+    },
+  });
+
+  if (hasPostedToday) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/app",
+      },
+      props: {},
+    };
+  }
 }
