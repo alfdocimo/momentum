@@ -4,8 +4,6 @@ import Dashboard from "../../components/layout/Dashboard";
 import { useSession } from "next-auth/react";
 
 import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next";
-import { getServerAuthSession } from "../../server/common/get-server-auth-session";
 
 export default function App() {
   const { data } = useSession();
@@ -119,20 +117,20 @@ export default function App() {
 // Keeping this here for reference - Not really needed
 // InferGetServerSidePropsType<typeof getServerSideProps>
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(ctx);
+// export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+//   const session = await getServerAuthSession(ctx);
 
-  if (!session?.user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-      props: {},
-    };
-  } else {
-    return {
-      props: {},
-    };
-  }
-}
+//   if (!session?.user) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: "/",
+//       },
+//       props: {},
+//     };
+//   } else {
+//     return {
+//       props: {},
+//     };
+//   }
+// }
