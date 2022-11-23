@@ -18,7 +18,9 @@ export default function Navbar() {
       <div className="navbar-start">
         <button
           onClick={() => {
-            signOut({ callbackUrl: "/" });
+            signOut({
+              callbackUrl: `${window.location.origin}`,
+            });
           }}
           className="btn-outline btn"
         >

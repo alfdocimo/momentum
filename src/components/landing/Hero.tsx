@@ -14,7 +14,7 @@ export default function Hero() {
           <button
             onClick={() => {
               signIn("google", {
-                callbackUrl: "/app",
+                callbackUrl: `${window.location.origin}/app`,
               });
             }}
             className="btn-primary btn"
