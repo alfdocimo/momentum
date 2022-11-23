@@ -136,6 +136,7 @@ export const entryRouter = router({
     }
 
     return {
+      hasEntries: allEntries.length > 0,
       learnedThisMonth: learnedThisMonth(),
       workedOnThisMonth: workedOnThisMonth(),
       monthEntries: monthEntriesLength,

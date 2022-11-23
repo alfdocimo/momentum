@@ -10,6 +10,17 @@ import { env } from "../../../env/server.mjs";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  cookies: {
+    sessionToken: {
+      name: "__momentum-session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: true,
+      },
+    },
+  },
   callbacks: {
     session({ session, user }) {
       if (session.user) {
