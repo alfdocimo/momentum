@@ -13,7 +13,9 @@ export default function Hero() {
 
           <button
             onClick={() => {
-              signIn("google");
+              signIn("google", {
+                callbackUrl: "/app",
+              });
             }}
             className="btn-primary btn"
           >
